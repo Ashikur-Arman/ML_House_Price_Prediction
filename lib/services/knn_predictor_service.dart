@@ -66,6 +66,7 @@ class KnnPredictorService {
     final nearestIndices = indices.take(_k).toList();
 
     // Exact match edge case
+    // Exact match edge case
     for (final idx in nearestIndices) {
       if (distances[idx] == 0) {
         return PredictionResult(
@@ -75,6 +76,7 @@ class KnnPredictorService {
               price: _trainingData[idx].price,
               distance: 0,
               weightPercent: 100,
+              rowIndex: _trainingData[idx].rowIndex,
             ),
           ],
         );
@@ -96,11 +98,13 @@ class KnnPredictorService {
     final predictedPrice = weightedSum / weightTotal;
 
     // Build neighbor info sorted by influence (highest weight first)
+    // Build neighbor info sorted by influence (highest weight first)
     final neighborList = nearestIndices.map((idx) {
       return NeighborInfo(
         price: _trainingData[idx].price,
         distance: distances[idx],
         weightPercent: (rawWeights[idx]! / weightTotal) * 100,
+        rowIndex: _trainingData[idx].rowIndex,
       );
     }).toList()
       ..sort((a, b) => b.weightPercent.compareTo(a.weightPercent));

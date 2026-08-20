@@ -3,8 +3,13 @@ import '../models/prediction_result.dart';
 
 class PredictionResultCard extends StatelessWidget {
   final PredictionResult result;
+  final VoidCallback onViewAnalysis;
 
-  const PredictionResultCard({super.key, required this.result});
+  const PredictionResultCard({
+    super.key,
+    required this.result,
+    required this.onViewAnalysis,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -47,32 +52,28 @@ class PredictionResultCard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Divider(color: theme.colorScheme.onPrimary.withOpacity(0.3)),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           Text(
-            'Based on ${result.topNeighbors.length} most similar houses',
+            'Based on ${result.topNeighbors.length} most similar houses from our dataset',
+            textAlign: TextAlign.center,
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onPrimary.withOpacity(0.85),
             ),
           ),
-          const SizedBox(height: 12),
-          ...result.topNeighbors.take(3).map(
-                (n) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 3),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '৳ ${n.price.toStringAsFixed(1)} lakh',
-                    style: TextStyle(color: theme.colorScheme.onPrimary, fontSize: 13),
-                  ),
-                  Text(
-                    '${n.weightPercent.toStringAsFixed(1)}% influence',
-                    style: TextStyle(
-                      color: theme.colorScheme.onPrimary.withOpacity(0.8),
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: onViewAnalysis,
+              icon: Icon(Icons.insights, color: theme.colorScheme.onPrimary),
+              label: Text(
+                'View Detailed Analysis',
+                style: TextStyle(color: theme.colorScheme.onPrimary),
+              ),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: theme.colorScheme.onPrimary.withOpacity(0.6)),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
             ),
           ),

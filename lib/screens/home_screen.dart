@@ -4,7 +4,8 @@ import '../models/prediction_result.dart';
 import '../services/knn_predictor_service.dart';
 import '../widgets/feature_input_field.dart';
 import '../widgets/prediction_result_card.dart';
-import '../widgets/algorithm_info_card.dart';
+import '../widgets/section_title.dart';
+import 'analysis_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -112,18 +113,30 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _buildHeader(theme),
-              const SizedBox(height: 24),
+              const SizedBox(height: 28),
+              const SectionTitle(title: 'Property Details', icon: Icons.edit_note),
+              const SizedBox(height: 12),
               _buildForm(theme),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
               if (_errorMessage != null)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 12),
                   child: Text(_errorMessage!, style: const TextStyle(color: Colors.red)),
                 ),
               if (_result != null) ...[
-                PredictionResultCard(result: _result!),
-                const SizedBox(height: 16),
-                const AlgorithmInfoCard(),
+                const SectionTitle(title: 'Prediction Result', icon: Icons.auto_awesome),
+                const SizedBox(height: 12),
+                PredictionResultCard(
+                  result: _result!,
+                  onViewAnalysis: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => AnalysisScreen(result: _result!),
+                      ),
+                    );
+                  },
+                ),
               ],
               const SizedBox(height: 20),
             ],
@@ -157,11 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 12),
           const Text(
             'House Price Predictor',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 4),
           Text(
@@ -187,17 +196,6 @@ class _HomeScreenState extends State<HomeScreen> {
           key: _formKey,
           child: Column(
             children: [
-              Row(
-                children: [
-                  Icon(Icons.edit_note, color: theme.colorScheme.primary),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'Enter House Details',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
               FeatureInputField(
                 controller: _areaController,
                 label: 'Area',
@@ -259,7 +257,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 18,
                     child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                   )
-                      : const Icon(Icons.auto_awesome),
+                      : const Icon(Icons.remember_me_outlined),
                   label: Text(_isPredicting ? 'Calculating...' : 'Predict Price'),
                 ),
               ),
