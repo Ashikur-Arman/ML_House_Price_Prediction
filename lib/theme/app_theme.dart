@@ -1,82 +1,28 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  static const Color primary =
-  Color(0xFF3157D5);
-
-  static const Color secondary =
-  Color(0xFF14B8A6);
-
-  static const Color background =
-  Color(0xFFF5F7FB);
-
-  static const Color darkText =
-  Color(0xFF172033);
-
-  static const Color greyText =
-  Color(0xFF697386);
-
-  static const Color border =
-  Color(0xFFE4E8F0);
-
-  static ThemeData lightTheme = ThemeData(
-    useMaterial3: true,
-    scaffoldBackgroundColor: background,
-
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: primary,
+  static ThemeData get lightTheme {
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: const Color(0xFF00695C), // deep teal
       brightness: Brightness.light,
-    ),
+    );
 
-    fontFamily: 'Roboto',
-
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      centerTitle: false,
-      foregroundColor: darkText,
-    ),
-
-    inputDecorationTheme:
-    InputDecorationTheme(
-      filled: true,
-      fillColor: Colors.white,
-
-      contentPadding:
-      const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 16,
+    return ThemeData(
+      useMaterial3: true,
+      colorScheme: colorScheme,
+      scaffoldBackgroundColor: const Color(0xFFF7F9F9),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        foregroundColor: Colors.black87,
       ),
-
-      border: OutlineInputBorder(
-        borderRadius:
-        BorderRadius.circular(16),
-        borderSide:
-        const BorderSide(
-          color: border,
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ),
-
-      enabledBorder:
-      OutlineInputBorder(
-        borderRadius:
-        BorderRadius.circular(16),
-        borderSide:
-        const BorderSide(
-          color: border,
-        ),
-      ),
-
-      focusedBorder:
-      OutlineInputBorder(
-        borderRadius:
-        BorderRadius.circular(16),
-        borderSide:
-        const BorderSide(
-          color: primary,
-          width: 2,
-        ),
-      ),
-    ),
-  );
+    );
+  }
 }

@@ -1,0 +1,143 @@
+import 'package:flutter/material.dart';
+import '../models/model_info.dart';
+
+class AlgorithmInfoCard extends StatelessWidget {
+  const AlgorithmInfoCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      elevation: 0,
+      color: theme.colorScheme.surfaceContainerLow,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Theme(
+        data: theme.copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          leading: Icon(Icons.psychology_outlined, color: theme.colorScheme.primary),
+          title: const Text(
+            'How does this prediction work?',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+          subtitle: const Text('Tap to see the algorithm & accuracy'),
+          childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          children: [
+            _buildExplanation(theme),
+            const SizedBox(height: 16),
+            _buildMetricsGrid(theme),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildExplanation(ThemeData theme) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          ModelInfo.algorithmName,
+          style: theme.textTheme.titleSmall?.copyWith(
+            color: theme.colorScheme.primary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'This model looks at the ${ModelInfo.kNeighbors} most similar houses '
+              'from historical data — matched by area, bedrooms, bathrooms, age, '
+              'and location — and calculates a weighted average of their prices. '
+              'Houses more similar to yours have more influence on the final price.',
+          style: theme.textTheme.bodyMedium,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMetricsGrid(ThemeData theme) {
+    return GridView.count(
+      crossAxisCount: 2,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      mainAxisSpacing: 10,
+      crossAxisSpacing: 10,
+      childAspectRatio: 1.6,
+      children: [
+        _StatTile(
+          icon: Icons.track_changes,
+          label: 'Accuracy (R²)',
+          value: '${(ModelInfo.r2Score * 100).toStringAsFixed(1)}%',
+          color: Colors.green,
+        ),
+        _StatTile(
+          icon: Icons.rule,
+          label: 'Avg. Error',
+          value: '±${ModelInfo.maeValue.toStringAsFixed(1)} lakh',
+          color: Colors.orange,
+        ),
+        _StatTile(
+          icon: Icons.hub_outlined,
+          label: 'Neighbors (k)',
+          value: '${ModelInfo.kNeighbors}',
+          color: Colors.blue,
+        ),
+        _StatTile(
+          icon: Icons.dataset_outlined,
+          label: 'Trained on',
+          value: '${ModelInfo.trainingSize} houses',
+          color: Colors.purple,
+        ),
+      ],
+    );
+  }
+}
+
+class _StatTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+  final Color color;
+
+  const _StatTile({
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withOpacity(0.2)),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: color, size: 22),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  value,
+                  style: TextStyle(fontWeight: FontWeight.bold, color: color, fontSize: 15),
+                ),
+                Text(
+                  label,
+                  style: TextStyle(fontSize: 11, color: Colors.grey[700]),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

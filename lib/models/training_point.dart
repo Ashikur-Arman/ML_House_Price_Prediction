@@ -1,15 +1,9 @@
-/// One training example.
-///
-/// The features stored in this model are already normalized
-/// using the same mean/std values used during Python training.
+/// One normalized training example loaded from assets/train_data_for_dart.json
 class TrainingPoint {
-  final List<double> features;
+  final List<double> features; // already normalized (mean/std applied)
   final double price;
 
-  const TrainingPoint({
-    required this.features,
-    required this.price,
-  });
+  const TrainingPoint({required this.features, required this.price});
 
   factory TrainingPoint.fromJson(Map<String, dynamic> json) {
     return TrainingPoint(

@@ -1,285 +1,83 @@
 import 'package:flutter/material.dart';
-
-import '../models/house_features.dart';
-import '../models/knn_prediction_result.dart';
-import '../theme/app_theme.dart';
+import '../models/prediction_result.dart';
 
 class PredictionResultCard extends StatelessWidget {
-  final HouseFeatures input;
-  final KnnPredictionResult result;
+  final PredictionResult result;
 
-  const PredictionResultCard({
-    super.key,
-    required this.input,
-    required this.result,
-  });
-
-  String _formatPrice(double value) {
-    return value.toStringAsFixed(2);
-  }
+  const PredictionResultCard({super.key, required this.result});
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       width: double.infinity,
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
+          colors: [theme.colorScheme.primary, theme.colorScheme.primaryContainer],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            AppTheme.primary,
-            Color(0xFF4D6FE8),
-          ],
         ),
-        borderRadius:
-        BorderRadius.circular(26),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color:
-            AppTheme.primary.withOpacity(
-              0.20,
-            ),
-            blurRadius: 24,
-            offset: const Offset(0, 10),
+            color: theme.colorScheme.primary.withOpacity(0.3),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
-      child: Padding(
-        padding:
-        const EdgeInsets.all(22),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding:
-                  const EdgeInsets.all(11),
-                  decoration: BoxDecoration(
-                    color: Colors.white
-                        .withOpacity(0.15),
-                    borderRadius:
-                    BorderRadius.circular(
-                      14,
-                    ),
+      child: Column(
+        children: [
+          Icon(Icons.home_work_rounded, size: 40, color: theme.colorScheme.onPrimary),
+          const SizedBox(height: 8),
+          Text(
+            'Estimated Price',
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: theme.colorScheme.onPrimary.withOpacity(0.9),
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '৳ ${result.predictedPrice.toStringAsFixed(2)} lakh',
+            style: theme.textTheme.headlineMedium?.copyWith(
+              color: theme.colorScheme.onPrimary,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Divider(color: theme.colorScheme.onPrimary.withOpacity(0.3)),
+          const SizedBox(height: 8),
+          Text(
+            'Based on ${result.topNeighbors.length} most similar houses',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onPrimary.withOpacity(0.85),
+            ),
+          ),
+          const SizedBox(height: 12),
+          ...result.topNeighbors.take(3).map(
+                (n) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 3),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '৳ ${n.price.toStringAsFixed(1)} lakh',
+                    style: TextStyle(color: theme.colorScheme.onPrimary, fontSize: 13),
                   ),
-                  child: const Icon(
-                    Icons.home,
-                    color: Colors.white,
-                    size: 25,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                const Expanded(
-                  child: Text(
-                    'Estimated Property Value',
+                  Text(
+                    '${n.weightPercent.toStringAsFixed(1)}% influence',
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight:
-                      FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 26),
-
-            const Text(
-              'AI PREDICTED PRICE',
-              style: TextStyle(
-                color: Colors.white70,
-                fontSize: 11,
-                letterSpacing: 1.4,
-                fontWeight:
-                FontWeight.w700,
-              ),
-            ),
-
-            const SizedBox(height: 7),
-
-            Text(
-              '৳ ${_formatPrice(result.predictedPrice)} Lakh',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 34,
-                fontWeight:
-                FontWeight.w800,
-              ),
-            ),
-
-            const SizedBox(height: 8),
-
-            Text(
-              result.exactMatch
-                  ? 'Exact match found in training data'
-                  : 'Estimated using ${result.k} similar properties',
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.white70,
-                fontSize: 13,
-              ),
-            ),
-
-            const SizedBox(height: 22),
-
-            Container(
-              padding:
-              const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: Colors.white
-                    .withOpacity(0.10),
-                borderRadius:
-                BorderRadius.circular(18),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: _InfoItem(
-                      icon: Icons.home_work_outlined,
-                      label: 'Area',
-                      value:
-                      '${input.areaSqft.toStringAsFixed(0)} sqft',
-                    ),
-                  ),
-                  Expanded(
-                    child: _InfoItem(
-                      icon: Icons.bed_outlined,
-                      label: 'Bedrooms',
-                      value:
-                      input.bedrooms.toInt().toString(),
-                    ),
-                  ),
-                  Expanded(
-                    child: _InfoItem(
-                      icon:
-                      Icons.bathtub_outlined,
-                      label: 'Bathrooms',
-                      value:
-                      input.bathrooms.toInt().toString(),
+                      color: theme.colorScheme.onPrimary.withOpacity(0.8),
+                      fontSize: 12,
                     ),
                   ),
                 ],
               ),
             ),
-
-            const SizedBox(height: 12),
-
-            Container(
-              padding:
-              const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: Colors.white
-                    .withOpacity(0.10),
-                borderRadius:
-                BorderRadius.circular(18),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: _InfoItem(
-                      icon: Icons
-                          .calendar_month_outlined,
-                      label: 'Age',
-                      value:
-                      '${input.ageYears.toStringAsFixed(0)} years',
-                    ),
-                  ),
-                  Expanded(
-                    child: _InfoItem(
-                      icon:
-                      Icons.location_on_outlined,
-                      label: 'City Distance',
-                      value:
-                      '${input.distanceToCityKm.toStringAsFixed(1)} km',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 18),
-
-            Container(
-              padding:
-              const EdgeInsets.symmetric(
-                horizontal: 14,
-                vertical: 11,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white
-                    .withOpacity(0.12),
-                borderRadius:
-                BorderRadius.circular(14),
-              ),
-              child: const Row(
-                children: [
-                  Icon(
-                    Icons.info_outline,
-                    color: Colors.white70,
-                    size: 18,
-                  ),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'This is an estimated value, not an official market valuation.',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 11,
-                        height: 1.4,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
-}
-
-class _InfoItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-
-  const _InfoItem({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Icon(
-          icon,
-          color: Colors.white70,
-          size: 19,
-        ),
-        const SizedBox(height: 5),
-        Text(
-          label,
-          style: const TextStyle(
-            color: Colors.white60,
-            fontSize: 10,
-          ),
-        ),
-        const SizedBox(height: 3),
-        Text(
-          value,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight:
-            FontWeight.w700,
-            fontSize: 11,
-          ),
-        ),
-      ],
     );
   }
 }
