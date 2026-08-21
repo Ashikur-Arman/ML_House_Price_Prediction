@@ -55,6 +55,7 @@ flutter:
   assets:
     - assets/train_data_for_dart.json
     - assets/scaler_params.json
+    - assets/cost_model.json
 
   # To add assets to your application, add an assets section, like this:
   # assets:

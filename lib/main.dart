@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
+import 'screens/root_screen.dart';
 import 'theme/app_theme.dart';
 
 void main() {
@@ -15,7 +15,7 @@ class HousePriceApp extends StatelessWidget {
       title: 'House Price Predictor',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: const HomeScreen(),
+      home: const RootScreen(),
     );
   }
 }

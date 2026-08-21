@@ -6,11 +6,13 @@ import '../models/house_features.dart';
 import '../models/prediction_result.dart';
 
 /// Fully on-device KNN regression — no server, no internet required.
-/// Mirrors sklearn's KNeighborsRegressor(n_neighbors=9, weights='distance', p=2).
+/// Mirrors sklearn's KNeighborsRegressor(n_neighbors=7, weights='distance', p=2).
 class KnnPredictorService {
   static const String _trainDataAsset = 'assets/train_data_for_dart.json';
   static const String _scalerAsset = 'assets/scaler_params.json';
-  static const int _k = 9; // must match the k used during training
+  static const int _k = 7; // must match the k used during training (GridSearchCV best)
+
+  int get trainingDataCount => _trainingData.length;
 
   late List<TrainingPoint> _trainingData;
   late List<double> _mean;
