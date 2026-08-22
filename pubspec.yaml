@@ -56,6 +56,8 @@ flutter:
     - assets/train_data_for_dart.json
     - assets/scaler_params.json
     - assets/cost_model.json
+    - assets/gbm_model_for_dart.json
+    - assets/house_gbm_scaler_params.json
 
   # To add assets to your application, add an assets section, like this:
   # assets:

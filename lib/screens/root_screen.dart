@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'cost_estimator_screen.dart';
+import 'house_gbm_screen.dart';
 
-/// Hosts both on-device models side by side:
+/// Hosts all three on-device models side by side:
 ///  - Tab 1: House Price Predictor (existing KNN model — untouched)
-///  - Tab 2: Construction Cost Estimator (new KNN model)
+///  - Tab 2: Construction Cost Estimator (existing GBM model — untouched)
+///  - Tab 3: House Price Predictor · New Model (new Gradient Boosting
+///    model, train_dhaka_price_gbm.ipynb) — same property-details input
+///    as Tab 1, so the two house-price models can be compared directly.
 ///
 /// Each tab keeps its own state (form inputs + last result) via
 /// IndexedStack, so switching tabs never clears what the user entered.
@@ -21,6 +25,7 @@ class _RootScreenState extends State<RootScreen> {
   static const _screens = [
     HomeScreen(),
     CostEstimatorScreen(),
+    HouseGbmScreen(),
   ];
 
   @override
@@ -41,6 +46,10 @@ class _RootScreenState extends State<RootScreen> {
           NavigationDestination(
             icon: Icon(Icons.engineering_rounded),
             label: 'Construction Cost',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.auto_graph_rounded),
+            label: 'New Price Model',
           ),
         ],
       ),
